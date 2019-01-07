@@ -22,7 +22,7 @@ public class burgerAlarmScript : MonoBehaviour {
     private int[] symbolPositions = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }; // Which button is [SYMBOL #] on?
     private static readonly string[] symbolNames = { "mayo", "bun", "tomato", "cheese", "lettuce", "onions", "pickles", "mustard", "ketchup", "meat" };
     //                                                 0       1      2         3         4          5         6          7          8          9
-    private int[] number = { 0, 0, 0, 0, 0, 0, 0 };
+    private int[] number = { 10, 10, 10, 10, 10, 10, 10 };
 
     private int[,] table =
     {
@@ -51,7 +51,7 @@ public class burgerAlarmScript : MonoBehaviour {
     private bool sequenceCorrect = true;
     private string[] reasonsForStrike = { "", "", "", "", "", "", "" };
 
-    private int[] swaps = { 0, 0, 0, 0, 0, 0, 0, 0 };
+    private int[] swaps = { 10, 10, 10, 10, 10, 10, 10, 10 };
 
     void Start () {
         _moduleId = _moduleIdCounter++;
@@ -111,16 +111,6 @@ public class burgerAlarmScript : MonoBehaviour {
             DebugMsg("Button #" + (i + 1) + " has " + symbolNames[buttonSymbols[i]] + " on it.");
 
             symbolPositions[buttonSymbols[i]] = i;
-        }
-
-        // Randomize number.
-
-        numberText.text = "";
-
-        for (int i = 0; i < number.Length; i++)
-        {
-            number[i] = Random.Range(0, 10);
-            numberText.text += number[i].ToString();
         }
 
         timerText.text = "";
@@ -292,12 +282,34 @@ public class burgerAlarmScript : MonoBehaviour {
                 tableOffsets[7] = 8;
         }
 
-        DebugMsg("The number displayed is " + numberText.text);
+        numberText.text = "";
 
         for (int i = 0; i < 8; i++)
         {
-            DebugMsg("The answer from Table #" + (i + 1) + " was " + tableOffsets[i] + ".");
-            
+            if (i != 7)
+            {
+                int rndNum = Random.Range(0, 10);
+
+                while (swaps.Contains((tableOffsets[i] + rndNum) % 10))
+                {
+                    rndNum = (rndNum + 1) % 10;
+                }
+
+                number[i] = rndNum;
+                numberText.text += number[i];
+            }
+
+            else
+            {
+                while (swaps.Contains((number[0] + number[1] + number[2] + number[3] + number[4] + number[5] + number[6] + tableOffsets[7]) % 10))
+                {
+                    for (int x = 0; x < 7; x++)
+                    {
+                        number[x] = (number[x] + 1) % 10;
+                    }
+                }
+            }
+
             if (i != 7)
             {
                 swaps[i] = (tableOffsets[i] + number[i]) % 10;
@@ -307,7 +319,11 @@ public class burgerAlarmScript : MonoBehaviour {
             {
                 swaps[i] = (tableOffsets[i] + number[0] + number[1] + number[2] + number[3] + number[4] + number[5] + number[6]) % 10;
             }
+            
+            DebugMsg("The answer from Table #" + (i + 1) + " was " + tableOffsets[i] + ".");
         }
+
+        DebugMsg("The number on the module is " + numberText.text);
 
         // Mess with table
 
