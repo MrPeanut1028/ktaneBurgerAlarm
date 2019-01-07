@@ -13,8 +13,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: burgerAlarm
   title: Burger Alarm
-  description: The last thing you'd want in your Burger King burger is somebody's
-    foot fungus.
+  description: 'The last thing you''d want in your Burger King burger is somebody''s
+    time bomb, but as it turns out, that might be what you get.
+
+
+    Manuals:
+
+    HTML: Coming soon.
+
+    PDF: Coming soon.'
   version: 
   outputFolder: build
-  previewImage: {fileID: 0}
+  previewImage: {fileID: 2800000, guid: 769bd56f84e12a7458d16dfdaea78e32, type: 3}

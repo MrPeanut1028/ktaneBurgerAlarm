@@ -34,7 +34,7 @@ public class burgerAlarmScript : MonoBehaviour {
         { 4, 9, 8, 2, 0, 8, 0, 5, 0, 9 },
         { 9, 1, 1, 1, 9, 6, 2, 7, 5, 3 },
         { 1, 7, 3, 6, 0, 0, 0, 0, 4, 2 },
-        { 5, 4, 1, 9, 2, 7, 2, 3, 4, 8 },
+        { 5, 4, 1, 9, 2, 7, 2, 3, 4, 7 },
         { 3, 8, 4, 7, 6, 3, 7, 4, 5, 4 }
     };
 
@@ -652,7 +652,7 @@ public class burgerAlarmScript : MonoBehaviour {
             time--;
             timerText.text = time.ToString();
 
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(1.5f);
         }
 
         timerText.text = "";
