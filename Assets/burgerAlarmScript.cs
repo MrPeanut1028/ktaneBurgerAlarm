@@ -155,7 +155,7 @@ public class burgerAlarmScript : MonoBehaviour {
             if (symbolPositions[2] % 3 == symbolPositions[1] % 3)
                 tableOffsets[1] = 8;
 
-            else if ((symbolPositions[1] % 3 == 1 && symbolPositions[2] == 9) || symbolPositions[2] % 3 == 1 && symbolPositions[1] == 9)
+            else if ((symbolPositions[1] % 3 == 1 && symbolPositions[2] == 9) || (symbolPositions[2] % 3 == 1 && symbolPositions[1] == 9))
                 tableOffsets[1] = 8;
 
             else
@@ -175,7 +175,7 @@ public class burgerAlarmScript : MonoBehaviour {
 
         else
         {
-            if (symbolPositions[9] % 3 != 1 || symbolPositions[9] == 9)
+            if (symbolPositions[9] % 3 != 1 && symbolPositions[9] != 9)
                 tableOffsets[2] = 3;
 
             else
@@ -289,39 +289,50 @@ public class burgerAlarmScript : MonoBehaviour {
             if (i != 7)
             {
                 int rndNum = Random.Range(0, 10);
+                swaps[i] = (tableOffsets[i] + rndNum) % 10;
 
-                while (swaps.Contains((tableOffsets[i] + rndNum) % 10))
+                for (int x = 0; x < 10; x++)
                 {
-                    rndNum = (rndNum + 1) % 10;
+                    if (swaps.Contains((tableOffsets[i] + rndNum) % 10))
+                    {
+                        rndNum = (rndNum + 1) % 10;
+                        swaps[i] = (tableOffsets[i] + rndNum) % 10;
+                    }
                 }
 
                 number[i] = rndNum;
-                numberText.text += number[i];
             }
 
             else
             {
-                while (swaps.Contains((number[0] + number[1] + number[2] + number[3] + number[4] + number[5] + number[6] + tableOffsets[7]) % 10))
+                int rndNum = Random.Range(0, 10);
+                swaps[i] = (tableOffsets[i] + rndNum) % 10;
+
+                for (int j = 0; j < 10; j++)
                 {
-                    for (int x = 0; x < 7; x++)
+                    if (swaps.Contains((number[0] + number[1] + number[2] + number[3] + number[4] + number[5] + number[6] + tableOffsets[7]) % 10))
                     {
-                        number[x] = (number[x] + 1) % 10;
+                        for (int x = 0; x < 7; x++)
+                        {
+                            number[x] = (number[x] + 1) % 10;
+                        }
+
+                        swaps[i] = (tableOffsets[i] + rndNum) % 10;
                     }
                 }
-            }
-
-            if (i != 7)
-            {
-                swaps[i] = (tableOffsets[i] + number[i]) % 10;
-            }
-
-            else
-            {
-                swaps[i] = (tableOffsets[i] + number[0] + number[1] + number[2] + number[3] + number[4] + number[5] + number[6]) % 10;
             }
             
             DebugMsg("The answer from Table #" + (i + 1) + " was " + tableOffsets[i] + ".");
         }
+
+        for (int i = 0; i < 7; i++)
+        {
+            numberText.text += number[i];
+
+            swaps[i] = (tableOffsets[i] + number[i]) % 10;
+        }
+
+        swaps[7] = (tableOffsets[7] + number[0] + number[1] + number[2] + number[3] + number[4] + number[5] + number[6]) % 10;
 
         DebugMsg("The number on the module is " + numberText.text);
 
@@ -433,14 +444,18 @@ public class burgerAlarmScript : MonoBehaviour {
             DebugMsg("STRIKE!!!");
             StartCoroutine(StrikeAnimation());
 
-            if (Random.Range(0, 2) == 0)
+            int randomNumber = Random.Range(0, 3);
+            if (randomNumber == 0)
             {
                 Audio.PlaySoundAtTransform("NoThisIsPatrick", Module.transform);
             }
-
-            else
+            else if (randomNumber == 1)
             {
                 Audio.PlaySoundAtTransform("NumberFifteen", Module.transform);
+            }
+            else
+            {
+                Audio.PlaySoundAtTransform("ThisIsHowYouEatABigMac", Module.transform);
             }
         }
 
@@ -463,14 +478,18 @@ public class burgerAlarmScript : MonoBehaviour {
             DebugMsg("STRIKE!!!");
             StartCoroutine(StrikeAnimation());
 
-            if (Random.Range(0, 2) == 0)
+            int randomNumber = Random.Range(0, 3);
+            if (randomNumber == 0)
             {
                 Audio.PlaySoundAtTransform("NoThisIsPatrick", Module.transform);
             }
-
-            else
+            else if (randomNumber == 1)
             {
                 Audio.PlaySoundAtTransform("NumberFifteen", Module.transform);
+            }
+            else
+            {
+                Audio.PlaySoundAtTransform("ThisIsHowYouEatABigMac", Module.transform);
             }
         }
 
@@ -501,14 +520,18 @@ public class burgerAlarmScript : MonoBehaviour {
             DebugMsg("STRIKE!!!");
             StartCoroutine(StrikeAnimation());
 
-            if (Random.Range(0, 2) == 0)
+            int randomNumber = Random.Range(0, 3);
+            if (randomNumber == 0)
             {
                 Audio.PlaySoundAtTransform("NoThisIsPatrick", Module.transform);
             }
-
-            else
+            else if (randomNumber == 1)
             {
                 Audio.PlaySoundAtTransform("NumberFifteen", Module.transform);
+            }
+            else
+            {
+                Audio.PlaySoundAtTransform("ThisIsHowYouEatABigMac", Module.transform);
             }
         }
 
@@ -680,14 +703,18 @@ public class burgerAlarmScript : MonoBehaviour {
             DebugMsg("Your customer got impatient and left. STRIKE!!!");
             StartCoroutine(StrikeAnimation());
 
-            if (Random.Range(0, 2) == 0)
+            int randomNumber = Random.Range(0, 3);
+            if (randomNumber == 0)
             {
                 Audio.PlaySoundAtTransform("NoThisIsPatrick", Module.transform);
             }
-
-            else
+            else if (randomNumber == 1)
             {
                 Audio.PlaySoundAtTransform("NumberFifteen", Module.transform);
+            }
+            else
+            {
+                Audio.PlaySoundAtTransform("ThisIsHowYouEatABigMac", Module.transform);
             }
         }
     }
