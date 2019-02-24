@@ -281,7 +281,7 @@ public class burgerAlarmScript : MonoBehaviour {
 
         else
         {
-            if (symbolPositions[1] % 3 > symbolPositions[4] % 3 || (symbolPositions[1] == 9 && symbolPositions[4] % 3 < 1) || (symbolPositions[4] == 9 && symbolPositions[1] % 3 > 1))
+            if ((symbolPositions[1] % 3 > symbolPositions[4] % 3 && symbolPositions[1] != 9 && symbolPositions[4] != 9) || (symbolPositions[1] == 9 && symbolPositions[4] % 3 < 1) || (symbolPositions[4] == 9 && symbolPositions[1] % 3 > 1))
                 tableOffsets[7] = 4;
 
             else
