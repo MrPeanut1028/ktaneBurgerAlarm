@@ -17,11 +17,14 @@ MonoBehaviour:
     time bomb, but as it turns out, that might be what you get.
 
 
+    Original module by Marksam32. Concept by willycel123. Everything else by me.
+
+
     Manuals:
 
-    HTML: Coming soon.
+    HTML: ktane.timwi.de/HTML/Burger%20Alarm.html.
 
-    PDF: Coming soon.'
+    PDF: ktane.timwi.de/PDF/Burger%20Alarm.pdf.'
   version: 
   outputFolder: build
   previewImage: {fileID: 2800000, guid: 769bd56f84e12a7458d16dfdaea78e32, type: 3}

@@ -1152,7 +1152,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1823135737249400}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 1.1, z: 0}
+  m_LocalPosition: {x: 0, y: 1.01, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4795165070757400}
@@ -3085,6 +3085,9 @@ MonoBehaviour:
   - {fileID: 4586687456130662}
   - {fileID: 4188696500001178}
   - {fileID: 4833672617711222}
+  TwitchHelpMessage: Use !{0} order to press the order button, and !{0} submit to
+    press submit. You can do !{0} press mayo bun tomato cheese lettuce onions pickles
+    mustard ketchup meat to press buttons. The timer is disabled on Twitch Plays.
 --- !u!114 &114397374230076074
 MonoBehaviour:
   m_ObjectHideFlags: 1

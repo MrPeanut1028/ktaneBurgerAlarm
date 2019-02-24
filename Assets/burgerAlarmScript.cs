@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using KModkit;
+using System;
+using Random = UnityEngine.Random;
 
 public class burgerAlarmScript : MonoBehaviour {
 
@@ -23,6 +25,7 @@ public class burgerAlarmScript : MonoBehaviour {
     private static readonly string[] symbolNames = { "mayo", "bun", "tomato", "cheese", "lettuce", "onions", "pickles", "mustard", "ketchup", "meat" };
     //                                                 0       1      2         3         4          5         6          7          8          9
     private int[] number = { 10, 10, 10, 10, 10, 10, 10 };
+    private bool TwitchPlaysActive = false;
 
     private int[,] table =
     {
@@ -52,6 +55,9 @@ public class burgerAlarmScript : MonoBehaviour {
     private string[] reasonsForStrike = { "", "", "", "", "", "", "" };
 
     private int[] swaps = { 10, 10, 10, 10, 10, 10, 10, 10 };
+
+    int[] rows = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+    int[] cols = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
     void Start () {
         _moduleId = _moduleIdCounter++;
@@ -275,7 +281,7 @@ public class burgerAlarmScript : MonoBehaviour {
 
         else
         {
-            if (symbolPositions[1] % 3 > symbolPositions[4] % 3)
+            if (symbolPositions[1] % 3 > symbolPositions[4] % 3 || (symbolPositions[1] == 9 && symbolPositions[4] % 3 < 1) || (symbolPositions[4] == 9 && symbolPositions[1] % 3 > 1))
                 tableOffsets[7] = 4;
 
             else
@@ -340,54 +346,23 @@ public class burgerAlarmScript : MonoBehaviour {
 
         int swappedThing;
 
-        for (int i = 0; i < 10; i++)
-        {
-            swappedThing = table[swaps[0], i];
-            table[swaps[0], i] = table[swaps[1], i];
-            table[swaps[1], i] = swappedThing;
-        }
-
+        rows[swaps[0]] = swaps[1];
+        rows[swaps[1]] = swaps[0];
         DebugMsg("Swapping rows " + swaps[0] + " and " + swaps[1] + ".");
 
-        for (int i = 0; i < 10; i++)
-        {
-            swappedThing = table[i, swaps[2]];
-            table[i, swaps[2]] = table[i, swaps[3]];
-            table[i, swaps[3]] = swappedThing;
-        }
-
+        cols[swaps[2]] = swaps[3];
+        cols[swaps[3]] = swaps[2];
         DebugMsg("Swapping columns " + swaps[2] + " and " + swaps[3] + ".");
 
-        if ((swaps[0] != swaps[4] && swaps[0] != swaps[5] && swaps[1] != swaps[4] && swaps[1] != swaps[5]) || swaps[0] == swaps[1])
-        {
-            for (int i = 0; i < 10; i++)
-            {
-                swappedThing = table[swaps[4], i];
-                table[swaps[4], i] = table[swaps[5], i];
-                table[swaps[5], i] = swappedThing;
-            }
+        swappedThing = rows[swaps[4]];
+        rows[swaps[4]] = rows[swaps[5]];
+        rows[swaps[5]] = swappedThing;
+        DebugMsg("Swapping rows " + swaps[4] + " and " + swaps[5] + ".");
 
-            DebugMsg("Swapping rows " + swaps[4] + " and " + swaps[5] + ".");
-        }
-
-        if ((swaps[2] != swaps[6] && swaps[2] != swaps[7] && swaps[3] != swaps[6] && swaps[3] != swaps[7]) || swaps[2] == swaps[3])
-        {
-            for (int i = 0; i < 10; i++)
-            {
-                swappedThing = table[i, swaps[6]];
-                table[i, swaps[6]] = table[i, swaps[7]];
-                table[i, swaps[7]] = swappedThing;
-            }
-            
-            DebugMsg("Swapping columns " + swaps[6] + " and " + swaps[7] + ".");
-        }
-
-        for (int i = 0; i < 10; i++)
-        {
-            DebugMsg("Row " + i + " is " + symbolNames[table[i, 0]] + ", " + symbolNames[table[i, 1]] + ", " + symbolNames[table[i, 2]] + ", " + symbolNames[table[i, 3]] + ", "
-                + symbolNames[table[i, 4]] + ", " + symbolNames[table[i, 5]] + ", " + symbolNames[table[i, 6]] + ", "
-                + symbolNames[table[i, 7]] + ", " + symbolNames[table[i, 8]] + ", and " + symbolNames[table[i, 9]] + ".");
-        }
+        swappedThing = cols[swaps[6]];
+        cols[swaps[6]] = cols[swaps[7]];
+        cols[swaps[7]] = swappedThing;
+        DebugMsg("Swapping columns " + swaps[6] + " and " + swaps[7] + ".");
     }
 
     void Order()
@@ -408,7 +383,7 @@ public class burgerAlarmScript : MonoBehaviour {
                 rowOrders[i] = Random.Range(0, 10);
                 colOrders[i] = Random.Range(0, 10);
 
-                btnsToPress[i + 1] = table[rowOrders[i], colOrders[i]];
+                btnsToPress[i + 1] = table[rows[rowOrders[i]], cols[colOrders[i]]];
                 orderStrings[i] = "no.    " + rowOrders[i] + colOrders[i];
 
                 DebugMsg("Order #" + (i + 1) + " is " + orderStrings[i].Replace("    ", " ") + ".");
@@ -501,6 +476,7 @@ public class burgerAlarmScript : MonoBehaviour {
             DebugMsg("Looks like that was right. Module solved!");
 
             numberText.text = "GG.";
+            timerText.text = "";
         }
 
         else
@@ -678,7 +654,10 @@ public class burgerAlarmScript : MonoBehaviour {
         
         finishedIncreasing = true;
 
-        numberText.text = "HURRYUP";
+        if (!TwitchPlaysActive)
+            numberText.text = "HURRYUP";
+        else
+            numberText.text = "RELAAAAX";
 
         yield return new WaitForSeconds(1f);
 
@@ -686,35 +665,52 @@ public class burgerAlarmScript : MonoBehaviour {
 
         yield return new WaitForSeconds(.5f);
 
-        while (time != 0 && currentlyOrdering)
+        if (!TwitchPlaysActive)
         {
-            time--;
-            timerText.text = time.ToString();
+            while (time != 0 && currentlyOrdering)
+            {
+                time--;
+                timerText.text = time.ToString();
 
-            yield return new WaitForSeconds(1.5f);
+                yield return new WaitForSeconds(1.5f);
+            }
+
+            timerText.text = "";
+
+            if (currentlyOrdering)
+            {
+                Module.HandleStrike();
+                currentlyOrdering = false;
+                DebugMsg("Your customer got impatient and left. STRIKE!!!");
+                StartCoroutine(StrikeAnimation());
+
+                int randomNumber = Random.Range(0, 3);
+                if (randomNumber == 0)
+                {
+                    Audio.PlaySoundAtTransform("NoThisIsPatrick", Module.transform);
+                }
+                else if (randomNumber == 1)
+                {
+                    Audio.PlaySoundAtTransform("NumberFifteen", Module.transform);
+                }
+                else
+                {
+                    Audio.PlaySoundAtTransform("ThisIsHowYouEatABigMac", Module.transform);
+                }
+            }
         }
 
-        timerText.text = "";
-
-        if (currentlyOrdering)
+        else
         {
-            Module.HandleStrike();
-            currentlyOrdering = false;
-            DebugMsg("Your customer got impatient and left. STRIKE!!!");
-            StartCoroutine(StrikeAnimation());
+            while (currentlyOrdering)
+            {
+                int rndNum = Random.Range(0, 100);
+                if (rndNum.ToString().Length == 1)
+                    timerText.text = "0" + rndNum.ToString();
+                else
+                    timerText.text = rndNum.ToString();
 
-            int randomNumber = Random.Range(0, 3);
-            if (randomNumber == 0)
-            {
-                Audio.PlaySoundAtTransform("NoThisIsPatrick", Module.transform);
-            }
-            else if (randomNumber == 1)
-            {
-                Audio.PlaySoundAtTransform("NumberFifteen", Module.transform);
-            }
-            else
-            {
-                Audio.PlaySoundAtTransform("ThisIsHowYouEatABigMac", Module.transform);
+                yield return new WaitForSeconds(.1f);
             }
         }
     }
@@ -754,5 +750,51 @@ public class burgerAlarmScript : MonoBehaviour {
         }
 
         timerText.text = "";
+    }
+
+    public string TwitchHelpMessage = "Use !{0} order to press the order button, and !{0} submit to press submit. You can do !{0} press mayo bun tomato cheese lettuce onions pickles mustard ketchup meat to press buttons. The timer is disabled on Twitch Plays.";
+    IEnumerator ProcessTwitchCommand(string cmd)
+    {
+        if (cmd.ToLowerInvariant() == "order")
+        {
+            yield return null;
+            DebugMsg("You ordered something.");
+            yield return new KMSelectable[] { order };
+        }
+
+        else if (cmd.ToLowerInvariant() == "submit")
+        {
+            yield return null;
+            DebugMsg("You submitted something.");
+            yield return new KMSelectable[] { submit };
+        }
+
+        else if (cmd.ToLowerInvariant().StartsWith("press "))
+        {
+            DebugMsg("You're pressing something.");
+            string cmdBtns = cmd.Substring(6);
+            string[] btnSequence = cmdBtns.Split(' ');
+
+            foreach (var btn in btnSequence)
+            {
+                if (!symbolNames.Contains(btn))
+                {
+                    yield return "sendtochaterror One of those isn't a button you can press...";
+                    yield break;
+                }
+            }
+
+            foreach (var btn in btnSequence)
+            {
+                int ingredientNum = Array.IndexOf(symbolNames, btn);
+                yield return null;
+                yield return new KMSelectable[] { btns[symbolPositions[ingredientNum]] };
+            }
+        }
+
+        else
+        {
+            yield break;
+        }
     }
 }
