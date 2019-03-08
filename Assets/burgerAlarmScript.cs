@@ -272,7 +272,7 @@ public class burgerAlarmScript : MonoBehaviour {
 
         if (Info.GetSolvableModuleNames().Contains("Ice Cream") || Info.GetSolvableModuleNames().Contains("Cooking") || Info.GetSolvableModuleNames().Contains("Cookie Jars"))
         {
-            if (symbolPositions[7] % 3 < symbolPositions[9] % 3)
+            if (symbolPositions[7] % 3 < symbolPositions[9] % 3 || (symbolPositions[7] % 3 == 0 && symbolPositions[9] == 9))
                 tableOffsets[7] = 1;
 
             else
