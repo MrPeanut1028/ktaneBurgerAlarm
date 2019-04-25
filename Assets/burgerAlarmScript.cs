@@ -103,6 +103,8 @@ public class burgerAlarmScript : MonoBehaviour {
 
     void GenerateModule()
     {
+        string[] modules = Info.GetModuleNames().ToArray();
+
         // Randomize buttons.
         buttonSymbols = buttonSymbols.Shuffle().ToArray();
         var originalTransforms = textureTransforms.Select(tx => tx.transform.localPosition).ToArray();
@@ -147,7 +149,7 @@ public class burgerAlarmScript : MonoBehaviour {
 
         // Number #2...
 
-        if (Info.GetSolvableModuleNames().Contains("The Clock") || Info.GetSolvableModuleNames().Contains("Rubik's Clock"))
+        if (modules.Contains("The Clock") || modules.Contains("Rubik’s Clock"))
         {
             if (symbolPositions[6] / 3 == symbolPositions[0] / 3)
                 tableOffsets[1] = 0;
@@ -158,7 +160,7 @@ public class burgerAlarmScript : MonoBehaviour {
 
         else
         {
-            if (symbolPositions[2] % 3 == symbolPositions[1] % 3)
+            if (symbolPositions[2] % 3 == symbolPositions[1] % 3 && symbolPositions[2] != 9 && symbolPositions[1] != 9) 
                 tableOffsets[1] = 8;
 
             else if ((symbolPositions[1] % 3 == 1 && symbolPositions[2] == 9) || (symbolPositions[2] % 3 == 1 && symbolPositions[1] == 9))
@@ -270,7 +272,7 @@ public class burgerAlarmScript : MonoBehaviour {
 
         // Number #8...
 
-        if (Info.GetSolvableModuleNames().Contains("Ice Cream") || Info.GetSolvableModuleNames().Contains("Cooking") || Info.GetSolvableModuleNames().Contains("Cookie Jars"))
+        if (modules.Contains("Ice Cream") || modules.Contains("Cooking") || modules.Contains("Cookie Jars"))
         {
             if (symbolPositions[7] % 3 < symbolPositions[9] % 3 || (symbolPositions[7] % 3 == 0 && symbolPositions[9] == 9))
                 tableOffsets[7] = 1;
@@ -629,7 +631,7 @@ public class burgerAlarmScript : MonoBehaviour {
     {
         int time = 0;
 
-        for (int i = 0; i < 91; i++)
+        for (int i = 0; i < 100; i++)
         {
             if (time.ToString().Length == 1)
             {
@@ -654,10 +656,7 @@ public class burgerAlarmScript : MonoBehaviour {
         
         finishedIncreasing = true;
 
-        if (!TwitchPlaysActive)
-            numberText.text = "HURRYUP";
-        else
-            numberText.text = "RELAAAAX";
+        numberText.text = "HURRYUP";
 
         yield return new WaitForSeconds(1f);
 
@@ -665,52 +664,35 @@ public class burgerAlarmScript : MonoBehaviour {
 
         yield return new WaitForSeconds(.5f);
 
-        if (!TwitchPlaysActive)
+        while (time != 0 && currentlyOrdering)
         {
-            while (time != 0 && currentlyOrdering)
-            {
-                time--;
-                timerText.text = time.ToString();
+            time--;
+            timerText.text = time.ToString();
 
-                yield return new WaitForSeconds(1.5f);
-            }
-
-            timerText.text = "";
-
-            if (currentlyOrdering)
-            {
-                Module.HandleStrike();
-                currentlyOrdering = false;
-                DebugMsg("Your customer got impatient and left. STRIKE!!!");
-                StartCoroutine(StrikeAnimation());
-
-                int randomNumber = Random.Range(0, 3);
-                if (randomNumber == 0)
-                {
-                    Audio.PlaySoundAtTransform("NoThisIsPatrick", Module.transform);
-                }
-                else if (randomNumber == 1)
-                {
-                    Audio.PlaySoundAtTransform("NumberFifteen", Module.transform);
-                }
-                else
-                {
-                    Audio.PlaySoundAtTransform("ThisIsHowYouEatABigMac", Module.transform);
-                }
-            }
+            yield return new WaitForSeconds(1f);
         }
 
-        else
-        {
-            while (currentlyOrdering)
-            {
-                int rndNum = Random.Range(0, 100);
-                if (rndNum.ToString().Length == 1)
-                    timerText.text = "0" + rndNum.ToString();
-                else
-                    timerText.text = rndNum.ToString();
+        timerText.text = "";
 
-                yield return new WaitForSeconds(.1f);
+        if (currentlyOrdering)
+        {
+            Module.HandleStrike();
+            currentlyOrdering = false;
+            DebugMsg("Your customer got impatient and left. STRIKE!!!");
+            StartCoroutine(StrikeAnimation());
+
+            int randomNumber = Random.Range(0, 3);
+            if (randomNumber == 0)
+            {
+                Audio.PlaySoundAtTransform("NoThisIsPatrick", Module.transform);
+            }
+            else if (randomNumber == 1)
+            {
+                Audio.PlaySoundAtTransform("NumberFifteen", Module.transform);
+            }
+            else
+            {
+                Audio.PlaySoundAtTransform("ThisIsHowYouEatABigMac", Module.transform);
             }
         }
     }

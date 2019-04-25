@@ -3087,7 +3087,7 @@ MonoBehaviour:
   - {fileID: 4833672617711222}
   TwitchHelpMessage: Use !{0} order to press the order button, and !{0} submit to
     press submit. You can do !{0} press mayo bun tomato cheese lettuce onions pickles
-    mustard ketchup meat to press buttons. The timer is disabled on Twitch Plays.
+    mustard ketchup meat to press buttons. The timer is enabled on Twitch Plays.
 --- !u!114 &114397374230076074
 MonoBehaviour:
   m_ObjectHideFlags: 1
