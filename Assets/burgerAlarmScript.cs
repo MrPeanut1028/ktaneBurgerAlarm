@@ -174,7 +174,7 @@ public class burgerAlarmScript : MonoBehaviour {
 
         if (Info.GetBatteryCount(Battery.D) == 0)
         {
-            if (symbolPositions[7] < 6 && symbolPositions[7] < 8)
+            if (symbolPositions[7] < 6 && symbolPositions[7] > 8)
                 tableOffsets[2] = 5;
                              
             else             
