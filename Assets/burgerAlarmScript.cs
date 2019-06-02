@@ -421,19 +421,10 @@ public class burgerAlarmScript : MonoBehaviour {
             DebugMsg("STRIKE!!!");
             StartCoroutine(StrikeAnimation());
 
-            int randomNumber = Random.Range(0, 3);
-            if (randomNumber == 0)
-            {
-                Audio.PlaySoundAtTransform("NoThisIsPatrick", Module.transform);
-            }
-            else if (randomNumber == 1)
-            {
-                Audio.PlaySoundAtTransform("NumberFifteen", Module.transform);
-            }
-            else
-            {
-                Audio.PlaySoundAtTransform("ThisIsHowYouEatABigMac", Module.transform);
-            }
+            int randomNumber = Random.Range(0, 5);
+            string[] soundNames = { "NoThisIsPatrick", "NumberFifteen", "ThisIsHowYouEatABigMac", "HamburgerPls", "MyDisappointmentBlaBlaBla" };
+
+            Audio.PlaySoundAtTransform(soundNames[randomNumber], Module.transform);
         }
 
         else if (btnsPressed < 7)
@@ -455,19 +446,10 @@ public class burgerAlarmScript : MonoBehaviour {
             DebugMsg("STRIKE!!!");
             StartCoroutine(StrikeAnimation());
 
-            int randomNumber = Random.Range(0, 3);
-            if (randomNumber == 0)
-            {
-                Audio.PlaySoundAtTransform("NoThisIsPatrick", Module.transform);
-            }
-            else if (randomNumber == 1)
-            {
-                Audio.PlaySoundAtTransform("NumberFifteen", Module.transform);
-            }
-            else
-            {
-                Audio.PlaySoundAtTransform("ThisIsHowYouEatABigMac", Module.transform);
-            }
+            int randomNumber = Random.Range(0, 5);
+            string[] soundNames = { "NoThisIsPatrick", "NumberFifteen", "ThisIsHowYouEatABigMac", "HamburgerPls", "MyDisappointmentBlaBlaBla" };
+
+            Audio.PlaySoundAtTransform(soundNames[randomNumber], Module.transform);
         }
 
         else if (sequenceCorrect && currentlyOrdering)
@@ -479,6 +461,8 @@ public class burgerAlarmScript : MonoBehaviour {
 
             numberText.text = "GG.";
             timerText.text = "";
+
+            Audio.PlaySoundAtTransform("Solve", Module.transform);
         }
 
         else
@@ -498,19 +482,10 @@ public class burgerAlarmScript : MonoBehaviour {
             DebugMsg("STRIKE!!!");
             StartCoroutine(StrikeAnimation());
 
-            int randomNumber = Random.Range(0, 3);
-            if (randomNumber == 0)
-            {
-                Audio.PlaySoundAtTransform("NoThisIsPatrick", Module.transform);
-            }
-            else if (randomNumber == 1)
-            {
-                Audio.PlaySoundAtTransform("NumberFifteen", Module.transform);
-            }
-            else
-            {
-                Audio.PlaySoundAtTransform("ThisIsHowYouEatABigMac", Module.transform);
-            }
+            int randomNumber = Random.Range(0, 5);
+            string[] soundNames = { "NoThisIsPatrick", "NumberFifteen", "ThisIsHowYouEatABigMac", "HamburgerPls", "MyDisappointmentBlaBlaBla" };
+
+            Audio.PlaySoundAtTransform(soundNames[randomNumber], Module.transform);
         }
 
         currentlyOrdering = false;
@@ -681,19 +656,10 @@ public class burgerAlarmScript : MonoBehaviour {
             DebugMsg("Your customer got impatient and left. STRIKE!!!");
             StartCoroutine(StrikeAnimation());
 
-            int randomNumber = Random.Range(0, 3);
-            if (randomNumber == 0)
-            {
-                Audio.PlaySoundAtTransform("NoThisIsPatrick", Module.transform);
-            }
-            else if (randomNumber == 1)
-            {
-                Audio.PlaySoundAtTransform("NumberFifteen", Module.transform);
-            }
-            else
-            {
-                Audio.PlaySoundAtTransform("ThisIsHowYouEatABigMac", Module.transform);
-            }
+            int randomNumber = Random.Range(0, 5);
+            string[] soundNames = { "NoThisIsPatrick", "NumberFifteen", "ThisIsHowYouEatABigMac", "HamburgerPls", "MyDisappointmentBlaBlaBla" };
+
+            Audio.PlaySoundAtTransform(soundNames[randomNumber], Module.transform);
         }
     }
 
