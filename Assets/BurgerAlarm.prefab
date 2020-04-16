@@ -2905,6 +2905,7 @@ MonoBehaviour:
   numberText: {fileID: 102817782534266556}
   timerText: {fileID: 102317593118749462}
   numberUnderText: {fileID: 102970582002089528}
+  timerUnderText: {fileID: 102055572753557126}
   textureTransforms:
   - {fileID: 4053878507011502}
   - {fileID: 4461079666580214}
@@ -2916,6 +2917,8 @@ MonoBehaviour:
   - {fileID: 4586687456130662}
   - {fileID: 4188696500001178}
   - {fileID: 4833672617711222}
+  x: {fileID: 1451351642946372}
+  check: {fileID: 1818646882931992}
   TwitchHelpMessage: Use !{0} order to press the order button, and !{0} submit to
     press submit. You can do !{0} press mayo bun tomato cheese lettuce onions pickles
     mustard ketchup meat to press buttons. The timer is enabled on Twitch Plays.

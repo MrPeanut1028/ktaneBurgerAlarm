@@ -13,8 +13,9 @@ public class burgerAlarmScript : MonoBehaviour {
     public KMAudio Audio;
     public KMSelectable[] btns;
     public KMSelectable order, submit;
-    public TextMesh numberText, timerText, numberUnderText;
+    public TextMesh numberText, timerText, numberUnderText, timerUnderText;
     public Transform[] textureTransforms;
+    public GameObject x, check;
 
     private static int _moduleIdCounter = 1;
     private int _moduleId;
@@ -61,6 +62,16 @@ public class burgerAlarmScript : MonoBehaviour {
 
     void Start () {
         _moduleId = _moduleIdCounter++;
+        for (int i = 0; i < 10; i++)
+        {
+            textureTransforms[i].gameObject.SetActive(false);
+        }
+        x.SetActive(false);
+        check.SetActive(false);
+        numberText.text = "";
+        numberUnderText.text = "";
+        timerText.text = "";
+        timerUnderText.text = "";
         Module.OnActivate += SetUpButtons;
     }
 
@@ -97,7 +108,15 @@ public class burgerAlarmScript : MonoBehaviour {
                 return false;
             };
         }
-        
+
+        numberUnderText.text = "000.0000";
+        timerUnderText.text = "00";
+        for (int i = 0; i < 10; i++)
+        {
+            textureTransforms[i].gameObject.SetActive(true);
+        }
+        x.SetActive(true);
+        check.SetActive(true);
         GenerateModule();
     }
 
