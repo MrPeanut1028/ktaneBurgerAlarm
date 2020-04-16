@@ -68,10 +68,6 @@ public class burgerAlarmScript : MonoBehaviour {
         }
         x.SetActive(false);
         check.SetActive(false);
-        numberText.text = "";
-        numberUnderText.text = "";
-        timerText.text = "";
-        timerUnderText.text = "";
         Module.OnActivate += SetUpButtons;
     }
 
@@ -109,8 +105,6 @@ public class burgerAlarmScript : MonoBehaviour {
             };
         }
 
-        numberUnderText.text = "000.0000";
-        timerUnderText.text = "00";
         for (int i = 0; i < 10; i++)
         {
             textureTransforms[i].gameObject.SetActive(true);
