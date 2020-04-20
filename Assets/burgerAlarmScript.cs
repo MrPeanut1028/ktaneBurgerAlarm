@@ -13,8 +13,9 @@ public class burgerAlarmScript : MonoBehaviour {
     public KMAudio Audio;
     public KMSelectable[] btns;
     public KMSelectable order, submit;
-    public TextMesh numberText, timerText;
+    public TextMesh numberText, timerText, numberUnderText, timerUnderText;
     public Transform[] textureTransforms;
+    public GameObject x, check;
 
     private static int _moduleIdCounter = 1;
     private int _moduleId;
@@ -25,7 +26,6 @@ public class burgerAlarmScript : MonoBehaviour {
     private static readonly string[] symbolNames = { "mayo", "bun", "tomato", "cheese", "lettuce", "onions", "pickles", "mustard", "ketchup", "meat" };
     //                                                 0       1      2         3         4          5         6          7          8          9
     private int[] number = { 10, 10, 10, 10, 10, 10, 10 };
-    private bool TwitchPlaysActive = false;
 
     private int[,] table =
     {
@@ -53,6 +53,7 @@ public class burgerAlarmScript : MonoBehaviour {
     private int btnsPressed = 0;
     private bool sequenceCorrect = true;
     private string[] reasonsForStrike = { "", "", "", "", "", "", "" };
+    private Coroutine time;
 
     private int[] swaps = { 10, 10, 10, 10, 10, 10, 10, 10 };
 
@@ -61,6 +62,12 @@ public class burgerAlarmScript : MonoBehaviour {
 
     void Start () {
         _moduleId = _moduleIdCounter++;
+        for (int i = 0; i < 10; i++)
+        {
+            textureTransforms[i].gameObject.SetActive(false);
+        }
+        x.SetActive(false);
+        check.SetActive(false);
         Module.OnActivate += SetUpButtons;
     }
 
@@ -71,7 +78,7 @@ public class burgerAlarmScript : MonoBehaviour {
             if (!solved)
                 Order();
             order.AddInteractionPunch();
-            Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, Module.transform);
+            Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, order.transform);
             return false;
         };
 
@@ -80,7 +87,7 @@ public class burgerAlarmScript : MonoBehaviour {
             if (!solved)
                 Submit();
             submit.AddInteractionPunch(10);
-            Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, Module.transform);
+            Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, submit.transform);
             return false;
         };
 
@@ -93,11 +100,17 @@ public class burgerAlarmScript : MonoBehaviour {
                 if (!solved && finishedIncreasing && currentlyOrdering)
                     BtnPress(j);
                 btns[j].AddInteractionPunch();
-                Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, Module.transform);
+                Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, btns[j].transform);
                 return false;
             };
         }
-        
+
+        for (int i = 0; i < 10; i++)
+        {
+            textureTransforms[i].gameObject.SetActive(true);
+        }
+        x.SetActive(true);
+        check.SetActive(true);
         GenerateModule();
     }
 
@@ -113,7 +126,7 @@ public class burgerAlarmScript : MonoBehaviour {
         {
             textureTransforms[buttonSymbols[i]].transform.localPosition = originalTransforms[i];
         }
-        
+
         for (int i = 0; i < 10; i++)
         {
             DebugMsg("Button #" + (i + 1) + " has " + symbolNames[buttonSymbols[i]] + " on it.");
@@ -376,7 +389,7 @@ public class burgerAlarmScript : MonoBehaviour {
 
             DebugMsg("You pressed order!");
 
-            StartCoroutine(Timer());
+            time = StartCoroutine(Timer());
 
             // Generate order
             
@@ -419,6 +432,7 @@ public class burgerAlarmScript : MonoBehaviour {
             DebugMsg("Nobody even ordered anything.");
 
             DebugMsg("STRIKE!!!");
+            StopAllCoroutines();
             StartCoroutine(StrikeAnimation());
 
             int randomNumber = Random.Range(0, 5);
@@ -444,6 +458,7 @@ public class burgerAlarmScript : MonoBehaviour {
             DebugMsg("The burger's not big enough. The customer starves to death and you get fired.");
 
             DebugMsg("STRIKE!!!");
+            StopAllCoroutines();
             StartCoroutine(StrikeAnimation());
 
             int randomNumber = Random.Range(0, 5);
@@ -459,8 +474,10 @@ public class burgerAlarmScript : MonoBehaviour {
 
             DebugMsg("Looks like that was right. Module solved!");
 
-            numberText.text = "GG.";
-            timerText.text = "";
+            numberText.text = "no.    15";
+            timerText.text = "GG";
+            StopCoroutine(time);
+            StartCoroutine(solveFade());
 
             Audio.PlaySoundAtTransform("Solve", Module.transform);
         }
@@ -480,6 +497,7 @@ public class burgerAlarmScript : MonoBehaviour {
             }
 
             DebugMsg("STRIKE!!!");
+            StopAllCoroutines();
             StartCoroutine(StrikeAnimation());
 
             int randomNumber = Random.Range(0, 5);
@@ -522,6 +540,18 @@ public class burgerAlarmScript : MonoBehaviour {
         }
 
         btnsPressed++;
+    }
+
+    IEnumerator solveFade()
+    {
+        yield return new WaitForSeconds(0.5f);
+        float fadeOutTime = 3f;
+        Color originalColor = numberText.color;
+        for (float t = 0.01f; t < fadeOutTime; t += Time.deltaTime)
+        {
+            numberText.color = Color.Lerp(originalColor, Color.clear, Mathf.Min(1, t / fadeOutTime));
+            yield return null;
+        }
     }
 
     void DebugMsg(string msg)
@@ -654,6 +684,7 @@ public class burgerAlarmScript : MonoBehaviour {
             Module.HandleStrike();
             currentlyOrdering = false;
             DebugMsg("Your customer got impatient and left. STRIKE!!!");
+            StopAllCoroutines();
             StartCoroutine(StrikeAnimation());
 
             int randomNumber = Random.Range(0, 5);
@@ -676,6 +707,7 @@ public class burgerAlarmScript : MonoBehaviour {
     IEnumerator StrikeAnimation()
     {
         numberText.color = Color.red;
+        numberUnderText.color = new Color32(50, 0, 0, 255);
 
         for (int i = 0; i < 100; i++)
         {
@@ -690,6 +722,7 @@ public class burgerAlarmScript : MonoBehaviour {
         }
 
         numberText.color = new Color32(50, 225, 50, 255);
+        numberUnderText.color = new Color32(0, 50, 0, 255);
         numberText.text = "";
 
         for (int i = 0; i < 7; i++)
@@ -700,42 +733,43 @@ public class burgerAlarmScript : MonoBehaviour {
         timerText.text = "";
     }
 
-    public string TwitchHelpMessage = "Use !{0} order to press the order button, and !{0} submit to press submit. You can do !{0} press mayo bun tomato cheese lettuce onions pickles mustard ketchup meat to press buttons. The timer is disabled on Twitch Plays.";
+    public string TwitchHelpMessage = "Use !{0} order to press the order button, and !{0} submit to press submit. You can do !{0} press mayo bun tomato cheese lettuce onions pickles mustard ketchup meat to press buttons.";
     IEnumerator ProcessTwitchCommand(string cmd)
     {
         if (cmd.ToLowerInvariant() == "order")
         {
             yield return null;
-            DebugMsg("You ordered something.");
+            //DebugMsg("You ordered something.");
             yield return new KMSelectable[] { order };
         }
 
         else if (cmd.ToLowerInvariant() == "submit")
         {
             yield return null;
-            DebugMsg("You submitted something.");
+            //DebugMsg("You submitted something.");
             yield return new KMSelectable[] { submit };
         }
 
         else if (cmd.ToLowerInvariant().StartsWith("press "))
         {
-            DebugMsg("You're pressing something.");
-            string cmdBtns = cmd.Substring(6);
+            string cmdBtns = cmd.Substring(6).ToLower();
             string[] btnSequence = cmdBtns.Split(' ');
 
             foreach (var btn in btnSequence)
             {
                 if (!symbolNames.Contains(btn))
                 {
+                    yield return null;
                     yield return "sendtochaterror One of those isn't a button you can press...";
                     yield break;
                 }
             }
 
+            yield return null;
+            //DebugMsg("You're pressing something.");
             foreach (var btn in btnSequence)
             {
                 int ingredientNum = Array.IndexOf(symbolNames, btn);
-                yield return null;
                 yield return new KMSelectable[] { btns[symbolPositions[ingredientNum]] };
             }
         }
@@ -744,5 +778,30 @@ public class burgerAlarmScript : MonoBehaviour {
         {
             yield break;
         }
+    }
+
+    IEnumerator TwitchHandleForcedSolve()
+    {
+        if (!currentlyOrdering)
+        {
+            order.OnInteract();
+            while (!finishedIncreasing) { yield return new WaitForSeconds(0.1f); }
+        }
+        if (!sequenceCorrect)
+        {
+            btnsPressed = 0;
+            sequenceCorrect = true;
+            for (int i = 0; i < reasonsForStrike.Length; i++)
+            {
+                reasonsForStrike[i] = "";
+            }
+        }
+        int start = btnsPressed;
+        for (int i = start; i < btnsToPress.Length; i++)
+        {
+            btns[Array.IndexOf(buttonSymbols, Array.IndexOf(symbolNames, symbolNames[btnsToPress[i]]))].OnInteract();
+            yield return new WaitForSeconds(0.1f);
+        }
+        submit.OnInteract();
     }
 }
